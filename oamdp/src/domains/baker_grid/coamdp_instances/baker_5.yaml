@@ -1,0 +1,52 @@
+---
+partial_mdp:
+  height: 7
+  width: 9
+  obstacles:
+    - i: 2
+      j: 3
+    - i: 3
+      j: 3
+    - i: 4
+      j: 3
+    - i: 5
+      j: 3
+    - i: 6
+      j: 3
+  dangerous_coordinates: []
+  prob_veering: 0.1
+  initial_state:
+    i: 3
+    j: 0
+possible_goals:
+  - i: 0
+    j: 3
+  - i: 6
+    j: 4
+  - i: 6
+    j: 8
+beta: 0.3
+communication_type:
+  SoftGenerativeNoise:
+    - 0.5
+    - 0.1
+communication_actions:
+  - Blue
+  - Circle
+  - None
+communication_cost: 0.5
+max_t: 20
+true_goal: 2
+shapes:
+  - BlueCircle
+  - GreenSquare
+  - BlueSquare
+belief_cost_function:
+  TVDistance:
+    - 0.0
+    - 0.0
+    - 1.0
+cost_type:
+  LinearCombination:
+    - 1.0
+    - 1.0

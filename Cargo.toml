@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "aostar",
+    "mdp",
+    "mcts",
+    "mdp-derive",
+    "oamdp",
+    "rtdp",
+]

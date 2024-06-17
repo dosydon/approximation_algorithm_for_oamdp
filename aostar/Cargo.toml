@@ -1,0 +1,19 @@
+[package]
+name = "aostar"
+version = "0.1.0"
+authors = ["Shuwa Miura <mana_burn_vo@yahoo.co.jp>"]
+edition = "2018"
+
+[dependencies]
+assert_approx_eq = "1.1.0"
+ordered-float = "1.0.2"
+num-traits = "0.2"
+itertools = "0.8.0"
+rand = "0.7.0"
+log = "0.4.0"
+mdp = { path = "../mdp" }
+# multi_objective_mdp = { path = "../multi_objective_mdp" }
+
+[dev-dependencies]
+criterion = "0.2"
+env_logger = "0.8.4"

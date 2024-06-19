@@ -12,10 +12,11 @@ use mdp::value_iteration::ValueTable;
 use rand::prelude::*;
 use std::collections::HashSet;
 
-pub struct BRTDP<S: State, H> {
+pub struct BRTDP<S: State, H, U> {
     pub lb: ValueTable<S>,
-    pub lb: ValueTable<S>,
+    pub ub: ValueTable<S>,
     pub h: H,
+    pub u: U,
     pub is_solved: HashSet<S>,
     pub max_t: usize,
 }

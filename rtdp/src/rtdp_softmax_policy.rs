@@ -53,12 +53,7 @@ impl<
         H: HeuristicWithMDPMut<M>,
     > GetActionProbabilityMut<M::Action, M> for RTDPSoftmaxPolicy<M::State, H>
 {
-<<<<<<< HEAD
     fn get_action_probability_mut(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32 {
-=======
-    fn get_probability_mut(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32 {
-        //         println!("{:?}", s);
->>>>>>> e8d7b112ef8d27f7088f2fd8450dab5d02614616
         for aa_id in 0..mdp.num_actions() {
             let aa = *mdp.id_to_action(aa_id);
             for (ss, _p) in mdp.p_mass_mut(s, &aa) {

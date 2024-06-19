@@ -1,0 +1,43 @@
+[package]
+name = "mdp"
+version = "0.1.0"
+authors = ["Shuwa Miura <mana_burn_vo@yahoo.co.jp>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+assert_approx_eq = "1.1.0"
+bimap = "0.4.0"
+itertools = "0.8.0"
+log = "0.4.0"
+num-traits = "0.2"
+ordered-float = "1.0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_with = "1.11.0"
+serde_json = "1.0.59"
+serde_yaml = "0.8"
+strum = "0.15.0"
+strum_macros = "0.15.0"
+wasm-bindgen = "= 0.2.74"
+rand = { version = "0.7.2", features = ["wasm-bindgen"] }
+petgraph = "0.5.1"
+mdp-derive = { path = "../mdp-derive" }
+tiny-skia = "0.8.3"
+
+[dev-dependencies]
+env_logger = "0.8.4"
+criterion = "0.3"
+
+[[bench]]
+name = "hmin"
+harness = false
+
+[[bench]]
+name = "blocks_world_next_state"
+harness = false
+
+[[bench]]
+name = "baker_grid_next_state"
+harness = false

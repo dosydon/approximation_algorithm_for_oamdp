@@ -5,5 +5,6 @@ members = [
     "mcts",
     "mdp-derive",
     "oamdp",
-    "rtdp",
+    "rtdp", 
+    "brtdp",
 ]

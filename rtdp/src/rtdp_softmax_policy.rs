@@ -1,7 +1,8 @@
 use crate::rtdp::RTDP;
 use mdp::heuristic::{HeuristicWithMDPMut, HminHeuristic, ZeroHeuristic};
 use mdp::mdp_traits::*;
-use mdp::policy::policy_traits::PolicyMut;
+use mdp::policy::policy_traits::GetActionProbabilityMut;
+use mdp::value_estimator::CostEstimatorMut;
 use std::fmt::Debug;
 use std::hash::Hash;
 
@@ -50,10 +51,14 @@ impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDPSoftmaxPolicy<S, H>
 impl<
         M: ActionAvailability + ActionEnumerable + PMassMut<f32> + Cost + IsTerminal + GetNextStateMut,
         H: HeuristicWithMDPMut<M>,
-    > PolicyMut<M::Action, M> for RTDPSoftmaxPolicy<M::State, H>
+    > GetActionProbabilityMut<M::Action, M> for RTDPSoftmaxPolicy<M::State, H>
 {
+<<<<<<< HEAD
+    fn get_action_probability_mut(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32 {
+=======
     fn get_probability_mut(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32 {
         //         println!("{:?}", s);
+>>>>>>> e8d7b112ef8d27f7088f2fd8450dab5d02614616
         for aa_id in 0..mdp.num_actions() {
             let aa = *mdp.id_to_action(aa_id);
             for (ss, _p) in mdp.p_mass_mut(s, &aa) {
@@ -100,23 +105,38 @@ mod tests {
 
         assert_approx_eq!(
             0.40183,
-            softmax_policy
-                .get_probability_mut(&GridWorldState::new(0, 0), &AttemptRight, &mut mdp,),
+            softmax_policy.get_action_probability_mut(
+                &GridWorldState::new(0, 0),
+                &AttemptRight,
+                &mut mdp,
+            ),
             err
         );
         assert_approx_eq!(
             0.287654,
-            softmax_policy.get_probability_mut(&GridWorldState::new(0, 0), &AttemptDown, &mut mdp,),
+            softmax_policy.get_action_probability_mut(
+                &GridWorldState::new(0, 0),
+                &AttemptDown,
+                &mut mdp,
+            ),
             err
         );
         assert_approx_eq!(
             0.15698,
-            softmax_policy.get_probability_mut(&GridWorldState::new(0, 0), &AttemptUp, &mut mdp,),
+            softmax_policy.get_action_probability_mut(
+                &GridWorldState::new(0, 0),
+                &AttemptUp,
+                &mut mdp,
+            ),
             err
         );
         assert_approx_eq!(
             0.1535276,
-            softmax_policy.get_probability_mut(&GridWorldState::new(0, 0), &AttemptLeft, &mut mdp,),
+            softmax_policy.get_action_probability_mut(
+                &GridWorldState::new(0, 0),
+                &AttemptLeft,
+                &mut mdp,
+            ),
             err
         );
     }

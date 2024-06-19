@@ -6,6 +6,7 @@ use mdp::mdp_traits::{
     ActionAvailability, ActionEnumerable, Cost, InitialState, IsTerminal, PMassMut, StatesActions,
 };
 use mdp::state_queue::StateQueue;
+use mdp::value_estimator::CostEstimatorMut;
 
 impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
     pub fn check_solved<M>(&mut self, s: &M::State, mdp: &mut M, epsilon: f32) -> bool
@@ -48,7 +49,7 @@ impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
         rv
     }
 
-    pub fn check_solved_mut<M>(&mut self, s: &M::State, mdp: &mut M, epsilon: f32) -> bool
+    pub fn check_solved_lrtdp<M>(&mut self, s: &M::State, mdp: &mut M, epsilon: f32) -> bool
     where
         M: StatesActions<State = S>
             + PMassMut<f32>
@@ -138,7 +139,7 @@ mod tests {
         let mut rtdp = RTDP::new(ZeroHeuristic {});
         rtdp.solve(&mut mdp, &mut rng, 100);
         assert_eq!(
-            rtdp.check_solved_mut(&mdp.initial_state(), &mut mdp, err),
+            rtdp.check_solved_lrtdp(&mdp.initial_state(), &mut mdp, err),
             false
         );
         assert_eq!(
@@ -148,7 +149,7 @@ mod tests {
 
         rtdp.solve(&mut mdp, &mut rng, 50000);
         assert_eq!(
-            rtdp.check_solved_mut(&mdp.initial_state(), &mut mdp, err),
+            rtdp.check_solved_lrtdp(&mdp.initial_state(), &mut mdp, err),
             true
         );
         assert_eq!(rtdp.check_solved(&mdp.initial_state(), &mut mdp, err), true);

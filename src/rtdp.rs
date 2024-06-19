@@ -7,7 +7,7 @@ use mdp::mdp_traits::{
 };
 use mdp::policy::policy_traits::{GetAction, GetActionMut};
 
-use mdp::value_estimator::CostEstimator;
+use mdp::value_estimator::{CostEstimator, CostEstimatorMut};
 use mdp::value_iteration::ValueTable;
 use rand::prelude::*;
 use std::collections::HashSet;
@@ -35,33 +35,32 @@ impl<M: StatesActions + PMass<f32> + Cost, H: HeuristicWithMDP<M>> CostEstimator
     }
 }
 
-impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
-    pub fn get_value_ssp_mut<M>(&mut self, s: &M::State, mdp: &mut M) -> f32
-    where
-        M: StatesActions<State = S> + PMassMut<f32> + Cost,
-        H: HeuristicWithMDPMut<M>,
-    {
+impl<M: StatesActions + PMassMut<f32> + Cost, H: HeuristicWithMDPMut<M>> CostEstimatorMut<M>
+    for RTDP<M::State, H>
+{
+    fn get_value_ssp_mut(&mut self, s: &M::State, mdp: &mut M) -> f32 {
         self.vt.get_value(s).max(self.h.h_with_mut(s, mdp))
     }
-    pub fn get_qsa_ssp_mut<M>(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32
-    where
-        M: StatesActions<State = S> + PMassMut<f32> + Cost,
-        H: HeuristicWithMDPMut<M>,
-    {
+
+    fn get_qsa_ssp_mut(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32 {
         mdp.p_mass_mut(s, a)
             .into_iter()
             .map(|(ss, p)| self.get_value_ssp_mut(&ss, mdp) * p)
             .sum::<f32>()
             + mdp.cost(s, a)
     }
+}
 
+impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
     pub fn update<M>(&mut self, s: &M::State, a: &M::Action, mdp: &mut M) -> f32
     where
         M: StatesActions<State = S> + PMassMut<f32> + Cost,
         H: HeuristicWithMDPMut<M>,
     {
         let qsa = self.get_qsa_ssp_mut(&s, &a, mdp);
-        let residual = (self.get_value_ssp_mut(s, mdp) - qsa).abs();
+        let value = self.get_value_ssp_mut(s, mdp);
+        //         println!("s: {:?}, a: {:?}, qsa: {}, value: {}", s, a, qsa, value);
+        let residual = (value - qsa).abs();
         self.vt.set_value(s, qsa);
 
         residual

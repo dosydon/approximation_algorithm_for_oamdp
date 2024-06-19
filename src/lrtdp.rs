@@ -6,6 +6,7 @@ use mdp::mdp_traits::{
     ActionAvailability, ActionEnumerable, Cost, GetNextStateMut, InitialState, IsTerminal,
     PMassMut, StatesActions,
 };
+use mdp::value_estimator::CostEstimatorMut;
 use rand::prelude::*;
 
 impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
@@ -59,7 +60,7 @@ impl<S: PartialEq + Eq + Copy + Clone + Debug + Hash, H> RTDP<S, H> {
 
             while visited.len() > 0 {
                 if let Some(ss) = visited.pop() {
-                    if !self.check_solved_mut(&ss, mdp, epsilon) {
+                    if !self.check_solved_lrtdp(&ss, mdp, epsilon) {
                         break;
                     }
                 }

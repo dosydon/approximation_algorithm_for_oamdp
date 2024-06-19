@@ -8,6 +8,10 @@ use rtdp::rtdp::RTDP;
 
 #[allow(non_snake_case)]
 fn main() {
+<<<<<<< HEAD
+    let _A = Block::new(0);
+=======
+>>>>>>> e8d7b112ef8d27f7088f2fd8450dab5d02614616
     let M = Block::new(1);
     let S = Block::new(2);
     let R = Block::new(3);

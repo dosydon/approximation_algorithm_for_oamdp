@@ -1,9 +1,5 @@
 use crate::mdp_traits::StatesActions;
 
-pub trait Heuristic<S> {
-    fn h(&self, s: &S) -> f32;
-}
-
 pub trait HeuristicWithMDP<M: StatesActions> {
     fn h_with(&self, s: &M::State, mdp: &M) -> f32;
 }

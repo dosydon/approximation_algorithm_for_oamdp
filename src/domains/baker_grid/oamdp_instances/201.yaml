@@ -1,0 +1,41 @@
+---
+beta: 0.3
+gamma: 0.9
+observability_assumption: OnlyActionsAreConsidered
+belief_cost_type: Disimulation
+horizon: 13
+random: ~
+prob_veering: 0.3
+partial_mdp:
+  height: 9
+  width: 17
+  obstacles:
+    - i: 8
+      j: 9
+    - i: 7
+      j: 9
+    - i: 6
+      j: 9
+    - i: 5
+      j: 9
+  dangerous_coordinates: []
+  prob_veering: 0.3
+  initial_state:
+    i: 8
+    j: 0
+possible_goals:
+  - i: 0
+    j: 16
+  - i: 8
+    j: 16
+  - i: 0
+    j: 4
+true_goal: 0
+initial_belief:
+  - 0.33333334
+  - 0.33333334
+  - 0.33333334
+objective:
+  LinearCombination:
+    - 1.0
+    - 0.1

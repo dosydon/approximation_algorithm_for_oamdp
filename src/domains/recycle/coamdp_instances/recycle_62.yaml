@@ -1,0 +1,46 @@
+---
+possible_goals:
+  - - Compost
+    - Recycle
+    - Compost
+  - - Compost
+    - Recycle
+    - Trash
+  - - Compost
+    - Trash
+    - Compost
+  - - Compost
+    - Trash
+    - Trash
+beta: 0.3
+communication_actions:
+  - None
+  - Announce: Compost
+  - Announce: Trash
+max_t: 20
+builder:
+  initial_locs:
+    - Trash
+    - Trash
+    - Compost
+    - Recycle
+    - Recycle
+  kinds:
+    - 0
+    - 1
+    - 2
+    - 0
+    - 1
+  actual_success_prob: 0.60670906
+true_goal: 1
+belief_cost_function:
+  TVDistance:
+    - 1.0
+    - 0.0
+    - 0.0
+    - 0.0
+cost_type:
+  LinearCombination:
+    - 0.7794361
+    - 0.22056389
+communication_cost: 0.077407

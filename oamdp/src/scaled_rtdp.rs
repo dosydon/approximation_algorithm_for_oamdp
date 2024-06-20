@@ -4,6 +4,7 @@ use std::hash::Hash;
 use mdp::heuristic::{HeuristicWithMDP, HeuristicWithMDPMut};
 use mdp::into_inner::Inner;
 use mdp::mdp_traits::{Cost, PMassMut, StatesActions};
+use mdp::value_estimator::CostEstimatorMut;
 
 use rtdp::rtdp::RTDP;
 

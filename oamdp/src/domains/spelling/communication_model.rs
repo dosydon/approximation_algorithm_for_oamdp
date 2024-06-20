@@ -2,7 +2,7 @@ use mdp::common::coordinate2::Coordinate2;
 use mdp::mdp_traits::ActionEnumerable;
 use mdp::mdp_traits::BuildFrom;
 use mdp::mdp_traits::ExplicitTransition;
-use mdp::policy::policy_traits::Policy;
+use mdp::policy::policy_traits::GetActionProbability;
 use mdp::policy::softmax_policy::SoftmaxPolicy;
 use mdp::spelling::Letter;
 use mdp::spelling::Letter::*;
@@ -100,7 +100,7 @@ impl<'a, const NL: usize, const N: usize> ProbSassGivenTheta<SpellingState<NL>, 
         self.mdp_for_each_goal[id]
             .enumerate_actions()
             .map(|aa| {
-                self.assumed_policy[id].get_probability(s, aa, &self.mdp_for_each_goal[id])
+                self.assumed_policy[id].get_action_probability(s, aa, &self.mdp_for_each_goal[id])
                     * self.mdp_for_each_goal[id].p(s, aa, ss)
                     * self.communication_probability(id, s, &a.communication_action, ss)
             })
@@ -121,7 +121,7 @@ impl<'a, const NL: usize, const N: usize> ProbSassGivenTheta<SpellingState<NL>, 
         self.mdp_for_each_goal[id]
             .enumerate_actions()
             .map(|aa| {
-                self.assumed_policy[id].get_probability(s, aa, &self.mdp_for_each_goal[id])
+                self.assumed_policy[id].get_action_probability(s, aa, &self.mdp_for_each_goal[id])
                     * self.mdp_for_each_goal[id].p(s, aa, ss)
                     * self.communication_probability(id, s, &a.communication_action, ss)
             })

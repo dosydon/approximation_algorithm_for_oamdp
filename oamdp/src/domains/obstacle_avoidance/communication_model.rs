@@ -1,8 +1,10 @@
 use mdp::{
     mdp_traits::BuildFrom,
-    policy::{policy_traits::Policy, softmax_policy::SoftmaxPolicy},
-    simple_av_obstacle_avoidance::{ObstacleAvoidanceBuilder, ObstacleAvoidanceParameter},
-    simple_av_obstacle_avoidance::{ObstacleAvoidanceMDP, ObstacleAvoidanceState},
+    policy::{policy_traits::GetActionProbability, softmax_policy::SoftmaxPolicy},
+    simple_av_obstacle_avoidance::{
+        ObstacleAvoidanceBuilder, ObstacleAvoidanceMDP, ObstacleAvoidanceParameter,
+        ObstacleAvoidanceState,
+    },
     value_iteration::{value_iteration_ssp, ValueTable},
 };
 
@@ -112,8 +114,11 @@ impl<'a, const N: usize> ProbSassGivenTheta<ObstacleAvoidanceState, ObstacleAvoi
         a: &ObstacleAvoidanceJointAction,
         _ss: &ObstacleAvoidanceState,
     ) -> f32 {
-        self.assumed_policy[id].get_probability(s, &a.domain_action, &self.mdp_for_each_goal[id])
-            * self.communication_probability(id, s, &a.communication_action)
+        self.assumed_policy[id].get_action_probability(
+            s,
+            &a.domain_action,
+            &self.mdp_for_each_goal[id],
+        ) * self.communication_probability(id, s, &a.communication_action)
     }
 }
 

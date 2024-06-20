@@ -3,7 +3,7 @@ use std::convert::TryInto;
 use mdp::into_inner::Inner;
 use mdp::mdp_traits::StatesActions;
 use mdp::mdp_traits::*;
-use mdp::policy::policy_traits::{Policy, PolicyMut};
+use mdp::policy::policy_traits::{GetActionProbability, GetActionProbabilityMut};
 
 use crate::belief_update_type::ObserveabilityAssumption;
 
@@ -84,7 +84,7 @@ impl<
 
 impl<
         'a,
-        P: Policy<M::Action, M>,
+        P: GetActionProbability<M::Action, M>,
         M: StatesActions + ExplicitTransition + ActionEnumerable,
         A: Inner<Result = M::Action> + Copy + Clone + Message,
         C: CommunicationProbability<A::Message>,
@@ -97,10 +97,13 @@ where
     fn prob_sass_given_theta(self, id: usize, s: &M::State, a: &A, _ss: &M::State) -> f32 {
         match self.observability_assumption {
             ObserveabilityAssumption::OnlyActionsAreConsidered => {
-                self.assumed_policy[id].get_probability(s, &a.inner(), &self.mdp_for_each_goal[id])
-                    * self
-                        .communication_model
-                        .communication_probability(id, &(*a).into())
+                self.assumed_policy[id].get_action_probability(
+                    s,
+                    &a.inner(),
+                    &self.mdp_for_each_goal[id],
+                ) * self
+                    .communication_model
+                    .communication_probability(id, &(*a).into())
             }
             _ => panic!("Not implemented"),
         }
@@ -109,7 +112,7 @@ where
 
 impl<
         'a,
-        P: PolicyMut<M::Action, M>,
+        P: GetActionProbabilityMut<M::Action, M>,
         M: StatesActions + ExplicitTransition + ActionEnumerable,
         A: Inner<Result = M::Action> + Message,
         C: CommunicationProbability<A::Message>,
@@ -122,7 +125,7 @@ where
     fn prob_sass_given_theta(self, id: usize, s: &M::State, a: &A, _ss: &M::State) -> f32 {
         match self.observability_assumption {
             ObserveabilityAssumption::OnlyActionsAreConsidered => self.assumed_policy[id]
-                .get_probability_mut(s, &a.inner(), &mut self.mdp_for_each_goal[id]),
+                .get_action_probability_mut(s, &a.inner(), &mut self.mdp_for_each_goal[id]),
             _ => panic!("Not implemented"),
         }
     }

@@ -1,3 +1,4 @@
+use mdp::value_estimator::CostEstimatorMut;
 use mdp::{
     heuristic::{HeuristicWithMDP, HeuristicWithMDPMut},
     into_inner::Inner,

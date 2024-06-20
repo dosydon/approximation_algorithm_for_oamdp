@@ -1,6 +1,6 @@
 use mdp::{
     mdp_traits::{ActionEnumerable, ExplicitTransition},
-    policy::{policy_traits::Policy, softmax_policy::SoftmaxPolicy},
+    policy::{policy_traits::GetActionProbability, softmax_policy::SoftmaxPolicy},
     value_iteration::{value_iteration_ssp, ValueTable},
 };
 
@@ -106,7 +106,7 @@ impl<'a, const K: usize> ProbSassGivenTheta<RecycleState<K>, RecycleJointAction>
         self.mdp_for_each_goal[id]
             .enumerate_actions()
             .map(|aa| {
-                self.assumed_policy[id].get_probability(s, aa, &self.mdp_for_each_goal[id])
+                self.assumed_policy[id].get_action_probability(s, aa, &self.mdp_for_each_goal[id])
                     * self.mdp_for_each_goal[id].p(s, aa, ss)
                     * self.communication_probability(id, s, &a.communication_action, ss)
             })
@@ -127,7 +127,7 @@ impl<'a, const K: usize> ProbSassGivenTheta<RecycleState<K>, RecycleJointAction>
         self.mdp_for_each_goal[id]
             .enumerate_actions()
             .map(|aa| {
-                self.assumed_policy[id].get_probability(s, aa, &self.mdp_for_each_goal[id])
+                self.assumed_policy[id].get_action_probability(s, aa, &self.mdp_for_each_goal[id])
                     * self.mdp_for_each_goal[id].p(s, aa, ss)
                     * self.communication_probability(id, s, &a.communication_action, ss)
             })

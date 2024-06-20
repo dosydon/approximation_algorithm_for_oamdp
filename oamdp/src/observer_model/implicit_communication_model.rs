@@ -1,7 +1,7 @@
 use mdp::into_inner::Inner;
 use mdp::mdp_traits::StatesActions;
 use mdp::mdp_traits::*;
-use mdp::policy::policy_traits::{Policy, PolicyMut};
+use mdp::policy::policy_traits::{GetActionProbability, GetActionProbabilityMut};
 
 use crate::belief_update_type::ObserveabilityAssumption;
 
@@ -33,7 +33,7 @@ impl<P, M: StatesActions, const N: usize> ImplicitCommunicationModel<P, M, N> {
 
 impl<
         'a,
-        P: Policy<M::Action, M>,
+        P: GetActionProbability<M::Action, M>,
         M: StatesActions + ExplicitTransition + ActionEnumerable,
         A: Inner<Result = M::Action>,
         const N: usize,
@@ -46,7 +46,7 @@ where
             ObserveabilityAssumption::ActionNotObservable => self.mdp_for_each_goal[id]
                 .enumerate_actions()
                 .map(|a| {
-                    self.assumed_policy[id].get_probability(
+                    self.assumed_policy[id].get_action_probability(
                         s,
                         &a.inner(),
                         &self.mdp_for_each_goal[id],
@@ -54,19 +54,21 @@ where
                 })
                 .sum(),
             ObserveabilityAssumption::ActionObservable => {
-                self.assumed_policy[id].get_probability(s, &a.inner(), &self.mdp_for_each_goal[id])
-                    * self.mdp_for_each_goal[id].p(s, &a.inner(), ss)
+                self.assumed_policy[id].get_action_probability(
+                    s,
+                    &a.inner(),
+                    &self.mdp_for_each_goal[id],
+                ) * self.mdp_for_each_goal[id].p(s, &a.inner(), ss)
             }
-            ObserveabilityAssumption::OnlyActionsAreConsidered => {
-                self.assumed_policy[id].get_probability(s, &a.inner(), &self.mdp_for_each_goal[id])
-            }
+            ObserveabilityAssumption::OnlyActionsAreConsidered => self.assumed_policy[id]
+                .get_action_probability(s, &a.inner(), &self.mdp_for_each_goal[id]),
         }
     }
 }
 
 impl<
         'a,
-        P: PolicyMut<M::Action, M>,
+        P: GetActionProbabilityMut<M::Action, M>,
         M: StatesActions + ExplicitTransition + ActionEnumerable,
         A: Inner<Result = M::Action>,
         const N: usize,
@@ -80,7 +82,7 @@ where
                 .num_actions())
                 .map(|aa_id| {
                     let aa = *self.mdp_for_each_goal[id].id_to_action(aa_id);
-                    self.assumed_policy[id].get_probability_mut(
+                    self.assumed_policy[id].get_action_probability_mut(
                         s,
                         &aa,
                         &mut self.mdp_for_each_goal[id],
@@ -88,14 +90,14 @@ where
                 })
                 .sum(),
             ObserveabilityAssumption::ActionObservable => {
-                self.assumed_policy[id].get_probability_mut(
+                self.assumed_policy[id].get_action_probability_mut(
                     s,
                     &a.inner(),
                     &mut self.mdp_for_each_goal[id],
                 ) * self.mdp_for_each_goal[id].p(s, &a.inner(), ss)
             }
             ObserveabilityAssumption::OnlyActionsAreConsidered => self.assumed_policy[id]
-                .get_probability_mut(s, &a.inner(), &mut self.mdp_for_each_goal[id]),
+                .get_action_probability_mut(s, &a.inner(), &mut self.mdp_for_each_goal[id]),
         }
     }
 }

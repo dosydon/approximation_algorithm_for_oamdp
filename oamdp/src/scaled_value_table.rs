@@ -35,13 +35,7 @@ impl<S: Eq + PartialEq + Debug + Clone + Hash + Copy, M: StatesActions> Heuristi
 where
     M::State: Inner<Result = S>,
 {
+    fn h_with_mut(&mut self, s: &<M as StatesActions>::State, _mdp: &mut M) -> f32 {
+        self.alpha * self.vt.get_value(&s.inner())
+    }
 }
-
-// impl<S: Eq + PartialEq + Debug + Clone + Hash + Copy> ScaledValueTable<S> {
-//     pub fn new(alpha: f32, vt: ValueTable<S>) -> ScaledValueTable<S> {
-//         ScaledValueTable {
-//             alpha: alpha,
-//             vt: vt,
-//         }
-//     }
-// }

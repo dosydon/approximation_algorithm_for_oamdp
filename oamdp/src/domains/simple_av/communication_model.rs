@@ -1,5 +1,5 @@
 use mdp::mdp_traits::BuildFrom;
-use mdp::policy::policy_traits::Policy;
+use mdp::policy::policy_traits::GetActionProbability;
 use mdp::simple_av::{SimpleAVParameter, SimpleAVPartialMDP, SimpleAVVehicleInFrontState};
 use mdp::value_iteration::{value_iteration_ssp, ValueTable};
 use mdp::{policy::softmax_policy::SoftmaxPolicy, simple_av::SimpleAVVehicleInFrontMDP};
@@ -105,7 +105,7 @@ impl<'a, const N: usize> ProbSassGivenTheta<SimpleAVVehicleInFrontState, AVJoint
         a: &AVJointAction,
         ss: &SimpleAVVehicleInFrontState,
     ) -> f32 {
-        self.assumed_policy[id].get_probability(s, &a.av_action, &self.mdp_for_each_goal[id])
+        self.assumed_policy[id].get_action_probability(s, &a.av_action, &self.mdp_for_each_goal[id])
             * self.communication_probability(id, s, &a.communication_action, ss)
     }
 }

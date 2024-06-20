@@ -6,3 +6,4 @@ mod traits;
 mod ub;
 
 pub use brtdp::BRTDP;
+pub use constant_upper_bound::ConstantUpperBound;

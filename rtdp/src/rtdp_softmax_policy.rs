@@ -86,9 +86,9 @@ impl<
 mod tests {
     use super::*;
     use assert_approx_eq::assert_approx_eq;
-    use mdp::common::coordinate2::Coordinate2;
+    
     use mdp::grid_world::{GridWorldAction::*, GridWorldMDP, GridWorldState};
-    use mdp::spelling::{Letter, SpellingAction, SpellingMDP, SpellingState};
+    
 
     #[test]
     fn test_grid_world_softmax() {

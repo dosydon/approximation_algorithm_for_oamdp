@@ -2,7 +2,7 @@ use mdp::mdp_traits::{IsTerminal, StatesActions};
 
 use crate::traits::UpperBoundWithMDPMut;
 
-pub(crate) struct ConstantUpperBound {
+pub struct ConstantUpperBound {
     value: f32,
 }
 

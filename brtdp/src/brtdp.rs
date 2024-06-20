@@ -1,16 +1,10 @@
-use core::fmt::Debug;
-use core::hash::Hash;
-use mdp::heuristic::{HeuristicWithMDP, HeuristicWithMDPMut};
+use mdp::heuristic::HeuristicWithMDPMut;
 use mdp::mdp_traits::{
-    ActionAvailability, ActionEnumerable, Cost, GetNextStateMut, InitialState, IsTerminal, PMass,
+    ActionAvailability, ActionEnumerable, Cost, GetNextStateMut, InitialState, IsTerminal,
     PMassMut, State, StatesActions,
 };
-use mdp::policy::policy_traits::{GetAction, GetActionMut};
 
-use mdp::value_estimator::CostEstimator;
 use mdp::value_iteration::ValueTable;
-use num_traits::FromPrimitive;
-use ordered_float::NotNan;
 use rand::prelude::*;
 use std::collections::{HashSet, VecDeque};
 
@@ -28,7 +22,7 @@ pub struct BRTDP<S: State, H, U> {
 }
 
 impl<S: State, H, U> BRTDP<S, H, U> {
-    pub fn best_action_mut<M>(
+    pub(crate) fn best_action_mut<M>(
         &mut self,
         s: &M::State,
         mdp: &mut M,
@@ -78,7 +72,7 @@ impl<S: State, H, U> BRTDP<S, H, U> {
         sum_next_state_uncertainties: f32,
         rng: &mut ThreadRng,
     ) -> S {
-        //         println!("{:?}", next_states_with_uncertainties);
+        assert!(sum_next_state_uncertainties > 0.0);
         next_states_with_uncertainties
             .choose_weighted(rng, |item| item.1 / sum_next_state_uncertainties)
             .unwrap()
@@ -120,7 +114,7 @@ impl<S: State, H, U> BRTDP<S, H, U> {
     {
         let mut current_state = mdp.initial_state();
         let mut time_step = 0;
-        let mut max_residual = 0.0;
+        let mut max_residual: f32 = 0.0;
         let mut visited = VecDeque::new();
 
         while !mdp.is_terminal(&current_state) && time_step < self.max_t {
@@ -131,15 +125,8 @@ impl<S: State, H, U> BRTDP<S, H, U> {
                 .best_action_mut(&current_state, mdp, ActionSelection::LB)
                 .unwrap();
 
-            let residual = self.update_ub(&current_state, mdp);
-            if residual > max_residual {
-                max_residual = residual;
-            }
-
-            let residual = self.update_lb(&current_state, &a, mdp);
-            if residual > max_residual {
-                max_residual = residual;
-            }
+            max_residual = max_residual.max(self.update_ub(&current_state, mdp));
+            max_residual = max_residual.max(self.update_lb(&current_state, &a, mdp));
 
             let next_state_uncertainties =
                 self.next_states_with_uncertainties(&current_state, &a, mdp);
@@ -147,7 +134,7 @@ impl<S: State, H, U> BRTDP<S, H, U> {
                 next_state_uncertainties.iter().map(|(_, b)| b).sum::<f32>();
 
             if sum_next_state_uncertainties
-                < ((self.get_ub_mut(&current_state, mdp) - self.get_lb_mut(&current_state, mdp))
+                <= ((self.get_ub_mut(&current_state, mdp) - self.get_lb_mut(&current_state, mdp))
                     .abs()
                     / self.tau)
             {
@@ -159,16 +146,9 @@ impl<S: State, H, U> BRTDP<S, H, U> {
         }
 
         while let Some(s) = visited.pop_front() {
-            let residual = self.update_ub(&s, mdp);
-            if residual > max_residual {
-                max_residual = residual;
-            }
-
             let a = self.best_action_mut(&s, mdp, ActionSelection::LB).unwrap();
-            let residual = self.update_lb(&s, &a, mdp);
-            if residual > max_residual {
-                max_residual = residual;
-            }
+            max_residual = max_residual.max(self.update_ub(&current_state, mdp));
+            max_residual = max_residual.max(self.update_lb(&current_state, &a, mdp));
         }
 
         max_residual
@@ -203,7 +183,7 @@ mod tests {
     use crate::constant_upper_bound::ConstantUpperBound;
 
     use super::*;
-    use assert_approx_eq::assert_approx_eq;
+
     use mdp::grid_world::{GridWorldMDP, GridWorldState};
     use mdp::heuristic::ZeroHeuristic;
     use mdp::value_iteration::value_iteration_ssp;

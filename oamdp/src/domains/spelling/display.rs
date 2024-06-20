@@ -6,7 +6,7 @@ use mdp::{
 
 use crate::{
     oamdp::{oamdp::OAMDP, BeliefState},
-    observer_model::{ImplicitCommunicationModel, SoftmaxModel},
+    observer_model::ImplicitCommunicationModel,
     traits::BeliefOverGoal,
 };
 use std::fmt::Debug;

@@ -8,7 +8,6 @@ use core::slice::Iter;
 use log::debug;
 use std::collections::HashSet;
 use std::fs::File;
-use std::hash::DefaultHasher;
 use std::io::BufRead;
 use std::io::BufReader;
 

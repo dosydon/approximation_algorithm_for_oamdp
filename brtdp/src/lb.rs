@@ -1,9 +1,8 @@
 use mdp::heuristic::HeuristicWithMDPMut;
 use mdp::mdp_traits::{
-    ActionAvailability, ActionEnumerable, Cost, GetNextStateMut, InitialState, IsTerminal, PMass,
+    Cost,
     PMassMut, State, StatesActions,
 };
-use mdp::policy::policy_traits::{GetAction, GetActionMut};
 
 use crate::BRTDP;
 

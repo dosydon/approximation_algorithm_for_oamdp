@@ -1,0 +1,47 @@
+---
+beta: 0.3
+gamma: 0.9
+observability_assumption: OnlyActionsAreConsidered
+belief_cost_type: TVDistance
+horizon: 13
+random: ~
+prob_veering: 0.5
+partial_mdp:
+  height: 7
+  width: 9
+  obstacles:
+    - i: 1
+      j: 3
+    - i: 1
+      j: 4
+    - i: 1
+      j: 5
+    - i: 1
+      j: 6
+    - i: 2
+      j: 3
+    - i: 3
+      j: 3
+    - i: 4
+      j: 3
+  dangerous_coordinates: []
+  prob_veering: 0.1
+  initial_state:
+    i: 6
+    j: 0
+possible_goals:
+  - i: 2
+    j: 4
+  - i: 0
+    j: 8
+  - i: 2
+    j: 8
+true_goal: 1
+initial_belief:
+  - 0.33333334
+  - 0.33333334
+  - 0.33333334
+objective:
+  LinearCombination:
+    - 1.0
+    - 0.1
